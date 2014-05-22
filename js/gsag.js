@@ -70,7 +70,7 @@ https://github.com/meetselva/attrchange/blob/master/MIT-License.txt
     /* ----------------------------------------------------------------
       EVENT: ONSCREEN
     ---------------------------------------------------------------- */
-    if (typeof($.fn.onScreen) === 'undefined') {
+    if (typeof($.fn.onScreen) != 'undefined') {
       $('[data-gsag-trigger=onscreen]').onScreen({
          doIn: function() {
            $.fn.gsag.tween($(this), 'gsagFinal', opts);
