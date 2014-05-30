@@ -32,14 +32,24 @@ https://github.com/meetselva/attrchange/blob/master/MIT-License.txt
     INIT
   ---------------------------------------------------------------- */
   $.fn.gsag = function(options) {
-    if (typeof(TweenMax) === 'undefined') {
-      alert('ERROR: TweenMax (GSAP) missing');
+    /* ----------------------------------------------------------------
+      DEPENDENCIES
+    ---------------------------------------------------------------- */
+    if (typeof($.pjax) === 'undefined') { // TODO: check for data-pjax-container to make it an error
+      alert('ERROR: jquery-pjax is missing.');
       return;
     }
-    if (typeof($.fn.onScreen) === 'undefined') {
-      console.log('WARNING: onScreen plugin missing');
+    if (typeof(TweenMax) === 'undefined') {
+      alert('ERROR: TweenMax (GSAP) is missing.');
+      return;
+    }
+    if (typeof($.fn.onScreen) === 'undefined') { // TODO: check for data-trigger=onscreen to make it an error
+      console.log('WARNING: onScreen plugin is missing.');
     }
     
+    /* ----------------------------------------------------------------
+      GLOBALS
+    ---------------------------------------------------------------- */
     var opts = $.extend({}, $.fn.gsag.defaults, options);
     
     /* ----------------------------------------------------------------
@@ -60,12 +70,20 @@ https://github.com/meetselva/attrchange/blob/master/MIT-License.txt
     ---------------------------------------------------------------- */
     if (typeof($.fn.onScreen) != 'undefined') {
       $('[data-gsag-trigger=onscreen]').onScreen({
+         //container: window,
+         //direction: 'vertical',
          doIn: function() {
            $.fn.gsag.tween($(this), 'gsagFinal', opts);
          },
          doOut: function() {
            $.fn.gsag.tween($(this), 'gsagInitial', opts);
-         }
+         }, 
+         //tolerance: 0,
+         //throttle: 50,
+         toggleClass: 'on-screen',
+         //lazyAttr: null,
+         //lazyPlaceholder: 'someImage.jpg',
+         //debug: false
       });
     }
   
