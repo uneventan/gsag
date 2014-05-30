@@ -46,8 +46,6 @@ function arr_diff(a1, a2) {
     INIT
   ---------------------------------------------------------------- */
   $.fn.gsag = function(options) {
-    console.log('[gsag] hey');
-    
     /* ----------------------------------------------------------------
       DEPENDENCIES
     ---------------------------------------------------------------- */
@@ -60,7 +58,7 @@ function arr_diff(a1, a2) {
       return;
     }
     if (typeof($.fn.onScreen) === 'undefined') { // TODO: check for data-trigger=onscreen to make it an error
-      console.log('WARNING: onScreen plugin is missing.');
+      //console.log('WARNING: onScreen plugin is missing.');
     }
     
     /* ----------------------------------------------------------------
