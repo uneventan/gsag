@@ -27,11 +27,27 @@ https://github.com/meetselva/attrchange/blob/master/MIT-License.txt
 
 
 
+function arr_diff(a1, a2) {
+  var a=[], diff=[];
+  for(var i=0;i<a1.length;i++)
+    a[a1[i]]=true;
+  for(var i=0;i<a2.length;i++)
+    if(a[a2[i]]) delete a[a2[i]];
+    else a[a2[i]]=true;
+  for(var k in a)
+    diff.push(k);
+  return diff;
+}
+
+
+
 (function($) {
   /* ----------------------------------------------------------------
     INIT
   ---------------------------------------------------------------- */
   $.fn.gsag = function(options) {
+    console.log('[gsag] hey');
+    
     /* ----------------------------------------------------------------
       DEPENDENCIES
     ---------------------------------------------------------------- */
@@ -64,6 +80,91 @@ https://github.com/meetselva/attrchange/blob/master/MIT-License.txt
       ---------------------------------------------------------------- */
       $.fn.gsag.tween($(this), 'gsagInitial', opts);
     });
+    
+    /* ----------------------------------------------------------------
+      PJAX
+    ---------------------------------------------------------------- */
+    /*$('a').pjax('[data-pjax-container]', {
+      fragment: '[data-pjax-container]'
+    });*/
+    if ($.support.pjax) {
+      $('body').addClass('pjax-ready');
+      var pjax_post_start_classes = [
+        'sent', 
+        'clicked', 
+        'success', 
+        'timeout', 
+        'error', 
+        'complete', 
+        'ended', 
+        'navigating'
+      ];
+      //$(document).pjax('a', '#pjax-container'); // TODO: option for a, i.e. a[data-pjax]
+      $(document).on('click', 'a', function(e) { // TODO: option for a, i.e. a[data-pjax]
+        var container = $('#pjax-container');
+        $.pjax.click(e, {
+          container: container, 
+          fragment: '#pjax-container'
+        });
+      });
+      
+      $(document).on('pjax:click', function(options) { // fires from a link that got activated; cancel to prevent pjax
+        // ...
+      });
+      $(document).on('pjax:beforeSend', function(xhr, options) { // can set XHR headers
+        // ...
+      });
+      $(document).on('pjax:start', function(xhr, options) {
+        // remove existing pjax classes
+        for (var i = pjax_post_start_classes.length - 1; i >= 0; i--) {
+          $('body').removeClass('pjax-' + pjax_post_start_classes[i]);
+        }
+        $('body').addClass('pjax-started');
+        // ...
+      });
+      $(document).on('pjax:send', function(xhr, options) {
+        $('body').addClass('pjax-sent');
+        // ...
+      });
+      $(document).on('pjax:clicked', function(options) { // fires after pjax has started from a link that got clicked
+        $('body').addClass('pjax-clicked');
+        // ...
+      });
+      $(document).on('pjax:beforeReplace', function(contents, options) { // before replacing HTML with content loaded from the server
+        // ...
+      });
+      $(document).on('pjax:success', function(data, status, xhr, options) { // after replacing HTML content loaded from the server
+        $('body').addClass('pjax-success');
+        // ...
+      });
+      $(document).on('pjax:timeout', function(xhr, options) { // fires after options.timeout; will hard refresh unless canceled
+        $('body').addClass('pjax-timeout');
+        // ...
+      });
+      $(document).on('pjax:error', function(xhr, textStatus, error, options) { // on ajax error; will hard refresh unless canceled
+        $('body').addClass('pjax-error');
+        // ...
+      });
+      $(document).on('pjax:complete', function(xhr, textStatus, options) { // always fires after ajax, regardless of result
+        // remove existing pjax classes
+        var pjax_post_complete_classes = ['success', 'timeout', 'error', 'complete', 'navigating'];
+        var pjax_post_complete_classes_to_remove = arr_diff(pjax_post_start_classes, pjax_post_complete_classes);
+        for (var i = pjax_post_complete_classes_to_remove.length - 1; i >= 0; i--) {
+          $('body').removeClass('pjax-' + pjax_post_complete_classes_to_remove[i]);
+        }
+        $('body').removeClass('pjax-started');
+        $('body').addClass('pjax-complete');
+        // ...
+      });
+      $(document).on('pjax:end', function(xhr, options) {
+        $('body').addClass('pjax-ended');
+        // ...
+      });
+      $(document).on('pjax:popstate', function() { // event direction property: "back"/"forward"
+        $('body').addClass('pjax-navigating');
+        // ...
+      });
+    }
     
     /* ----------------------------------------------------------------
       EVENT: ONSCREEN
