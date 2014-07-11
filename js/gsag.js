@@ -133,7 +133,13 @@ function arr_diff(a1, a2) {
       });
       $(document).on('pjax:success', function(data, status, xhr, options) { // after replacing HTML content loaded from the server
         $('body').addClass('pjax-success');
-        // ...
+        try {
+          _gsag_pjax_callback_success();
+        } catch (variable) {
+          // ...
+        } finally {
+          // ...
+        }
       });
       $(document).on('pjax:timeout', function(xhr, options) { // fires after options.timeout; will hard refresh unless canceled
         $('body').addClass('pjax-timeout');
