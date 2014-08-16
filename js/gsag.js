@@ -86,6 +86,7 @@ function arr_diff(a1, a2) {
       fragment: '[data-pjax-container]'
     });*/
     if ($.support.pjax) {
+      $.pjax.defaults.timeout = 10000;
       $('body').addClass('pjax-ready');
       var pjax_post_start_classes = [
         'sent', 
@@ -97,8 +98,8 @@ function arr_diff(a1, a2) {
         'ended', 
         'navigating'
       ];
-      //$(document).pjax('a', '#pjax-container'); // TODO: option for a, i.e. a[data-pjax]
-      $(document).on('click', 'a', function(e) { // TODO: option for a, i.e. a[data-pjax]
+      $(document).off('click.pjax');
+      $(document).on('click.pjax', 'a', function(e) { // TODO: option for a, i.e. a[data-pjax]
         var container = $('#pjax-container');
         $.pjax.click(e, {
           container: container, 
@@ -107,7 +108,13 @@ function arr_diff(a1, a2) {
       });
       
       $(document).on('pjax:click', function(options) { // fires from a link that got activated; cancel to prevent pjax
-        // ...
+        try {
+          _gsag_pjax_click_success();
+        } catch (variable) {
+          // ...
+        } finally {
+          // ...
+        }
       });
       $(document).on('pjax:beforeSend', function(xhr, options) { // can set XHR headers
         // ...
