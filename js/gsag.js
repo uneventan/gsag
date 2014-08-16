@@ -107,18 +107,21 @@ function arr_diff(a1, a2) {
         });
       });
       
+      $(document).off('pjax:click');
       $(document).on('pjax:click', function(options) { // fires from a link that got activated; cancel to prevent pjax
         try {
-          _gsag_pjax_click_success();
+          _gsag_pjax_callback_click();
         } catch (variable) {
           // ...
         } finally {
           // ...
         }
       });
+      $(document).off('pjax:beforeSend')
       $(document).on('pjax:beforeSend', function(xhr, options) { // can set XHR headers
         // ...
       });
+      $(document).off('pjax:start');
       $(document).on('pjax:start', function(xhr, options) {
         // remove existing pjax classes
         for (var i = pjax_post_start_classes.length - 1; i >= 0; i--) {
@@ -127,17 +130,21 @@ function arr_diff(a1, a2) {
         $('body').addClass('pjax-started');
         // ...
       });
+      $(document).off('pjax:send')
       $(document).on('pjax:send', function(xhr, options) {
         $('body').addClass('pjax-sent');
         // ...
       });
+      $(document).off('pjax:clicked')
       $(document).on('pjax:clicked', function(options) { // fires after pjax has started from a link that got clicked
         $('body').addClass('pjax-clicked');
         // ...
       });
+      $(document).off('pjax:beforeReplace');
       $(document).on('pjax:beforeReplace', function(contents, options) { // before replacing HTML with content loaded from the server
         // ...
       });
+      $(document).off('pjax:success')
       $(document).on('pjax:success', function(data, status, xhr, options) { // after replacing HTML content loaded from the server
         $('body').addClass('pjax-success');
         try {
@@ -148,14 +155,17 @@ function arr_diff(a1, a2) {
           // ...
         }
       });
+      $(document).off('pjax:timeout');
       $(document).on('pjax:timeout', function(xhr, options) { // fires after options.timeout; will hard refresh unless canceled
         $('body').addClass('pjax-timeout');
         // ...
       });
+      $(document).off('pjax:error');
       $(document).on('pjax:error', function(xhr, textStatus, error, options) { // on ajax error; will hard refresh unless canceled
         $('body').addClass('pjax-error');
         // ...
       });
+      $(document).off('pjax:complete');
       $(document).on('pjax:complete', function(xhr, textStatus, options) { // always fires after ajax, regardless of result
         // remove existing pjax classes
         var pjax_post_complete_classes = ['success', 'timeout', 'error', 'complete', 'navigating'];
@@ -167,13 +177,21 @@ function arr_diff(a1, a2) {
         $('body').addClass('pjax-complete');
         // ...
       });
+      $(document).off('pjax:end');
       $(document).on('pjax:end', function(xhr, options) {
         $('body').addClass('pjax-ended');
         // ...
       });
+      $(document).off('pjax:popstate');
       $(document).on('pjax:popstate', function() { // event direction property: "back"/"forward"
         $('body').addClass('pjax-navigating');
-        // ...
+        try {
+          setTimeout(_gsag_pjax_callback_popstate, 250);
+        } catch (variable) {
+          // ...
+        } finally {
+          // ...
+        }
       });
     }
     
